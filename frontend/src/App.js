@@ -1,3 +1,4 @@
+/* global window.localStorage */
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -15,7 +16,8 @@ class App extends React.Component {
       email: '',
       username: '',
       password: '',
-      signUpLogIn: 'Sign Up'
+      signUpLogIn: 'Sign Up',
+      logged_in: window.localStorage.getItem('token') ? true : false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,7 +33,8 @@ class App extends React.Component {
     const username = this.state.username;
     const password = this.state.password;
     event.preventDefault();
-    axios.post('http://97.107.128.107:8007/users/', {'email': email, 'username': username, 'password': password}).then(console.log("Success"));
+    fetch('http://97.107.128.107:8007/login/users',
+    {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({'username': username, 'password': password})}).then(res=>res.json()).then(json=>{window.localStorage.setItem('token', json.token); this.setState({logged_in: true, username: json.user.username});});
   }
 
   handleSubmitLogIn(event) {
@@ -39,7 +42,7 @@ class App extends React.Component {
     const username = this.state.username;
     const password = this.state.password;
     event.preventDefault();
-    axios.post('http://97.107.128.107:8007/users/', {'email': email, 'username': username, 'password': password}).then(console.log("Success"));
+    axios.post('http://97.107.128.107:8007/login/users', {'username': username, 'password': password}).then(res => res.json()).then(json=>{window.localStorage.setItem('token', json.token); this.setState({logged_in: true, username: json.user.username});});
   }
 
   signIn(e){
