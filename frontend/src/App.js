@@ -9,28 +9,28 @@ axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 
 class App extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      email: '',
-      username: '',
-      password: ''
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+  // constructor(props){
+  //   super(props);
+  //   this.state = {
+  //     email: '',
+  //     username: '',
+  //     password: ''
+  //   };
+  //   this.handleChange = this.handleChange.bind(this);
+  //   this.handleSubmit = this.handleSubmit.bind(this);
+  // }
 
-  handleChange(event) {
-    this.setState({[event.target.name]: event.target.value});
-  }
+  // handleChange(event) {
+  //   this.setState({[event.target.name]: event.target.value});
+  // }
 
-  handleSubmit(event) {
-    const email = this.state.email;
-    const username = this.state.username;
-    const password = this.state.password;
-    event.preventDefault();
-    axios.post('http://97.107.128.107:8007/users/', {'email': email, 'username': username, 'password': password}).then(console.log("Success"));
-  }
+  // handleSubmit(event) {
+  //   const email = this.state.email;
+  //   const username = this.state.username;
+  //   const password = this.state.password;
+  //   event.preventDefault();
+  //   axios.post('http://97.107.128.107:8007/users/', {'email': email, 'username': username, 'password': password}).then(console.log("Success"));
+  // }
 
   render(){
     return (
@@ -45,9 +45,10 @@ class App extends React.Component {
             <Row className="text-center mb-5">
               <Col md={{ span: 6, offset: 3 }}>
                 <h1>Create Your Account</h1>
+                <Button>Take Attendance</Button>
               </Col>
             </Row>
-            <Form onSubmit={this.handleSubmit}>
+            {/* <Form onSubmit={this.handleSubmit}>
             <Row className="mb-4" float="middle">
               <Col md={{ span: 6, offset: 3 }}>
                 <Form.Group controlId="formBasicEmail">
@@ -69,7 +70,14 @@ class App extends React.Component {
                 <Button variant="primary" type="submit">Submit</Button>
               </Col>
             </Row>
-            </Form>
+            </Form> */}
+          </Container>
+          <Container>
+            <Row>
+              <Col md= {{ span: 4, offset: 3 }}>
+
+              </Col>
+            </Row>
           </Container>
         </Jumbotron>
       </div>

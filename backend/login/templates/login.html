@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="eng">
+    <head>
+        <meta charset="UTF-8">
+        <title>The index page</title>  
+    </head>
+    <body>
+        <h1>This is the login page</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{form}}
+            <input type="submit">
+        </form>
+
+    </body>
