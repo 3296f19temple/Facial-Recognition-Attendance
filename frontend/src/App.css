@@ -6,3 +6,26 @@
 #signIn{
     margin-right: 25px;
 }
+
+#createClass{
+    text-align: center;
+}
+
+#manageClass{
+    text-align: center;
+}
+
+.row{
+    margin-bottom: 50px;
+}
+
+#course-list{
+    margin-bottom: 25px;
+    display: block;
+    text-align: center;
+    float: center;
+}
+
+#take-attendance{
+    text-align: center;
+}

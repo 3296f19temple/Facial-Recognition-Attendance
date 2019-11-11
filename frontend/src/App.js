@@ -4,7 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
 import querystring from 'querystring';
-import {Navbar, Container, Jumbotron, Form, Button, Row, Col} from 'react-bootstrap';
+import {Navbar, Container, Jumbotron, Form, Button, Row, Col, Card} from 'react-bootstrap';
 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
@@ -17,11 +17,18 @@ class App extends React.Component {
       username: '',
       password: '',
       signUpLogIn: 'Sign Up',
-      loggedInUser: ''
+      loggedInUser: '',
+      courseArray: [],
+      addingClass: 'No',
+      courseId: '',
+      courseName: '',
+      courseMeetingSchedule: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmitLogIn = this.handleSubmitLogIn.bind(this);
+    this.handleAddClass = this.handleAddClass.bind(this);
+    this.handleSubmitCreateClass = this.handleSubmitCreateClass.bind(this);
   }
 
   handleChange(event) {
@@ -54,6 +61,7 @@ class App extends React.Component {
         }
       }
     });
+    this.getClasses();
   }
 
   signIn(e){
@@ -66,6 +74,30 @@ class App extends React.Component {
     e.preventDefault();
     this.setState({signUpLogIn: 'Log In'});
     this.setState({signUpLogIn: 'Sign Up'});
+  }
+
+  setClassState(element){
+    this.setState({courseArray: element})
+    console.log(element);
+  }
+
+  getClasses(){
+    axios.get('http://97.107.128.107:8007/classes/').then(responseArr => {
+      this.setClassState(responseArr.data);
+    });
+  }
+
+  handleAddClass(event){
+    this.setState({addingClass: "Yes"});
+  }
+
+  handleSubmitCreateClass(event){
+    const courseId = this.state.courseId;
+    const courseName = this.state.courseName;
+    const courseMeetingSchedule = this.state.courseMeetingSchedule;
+    axios.post('http://97.107.128.107:8007/classes/', {"courseId": courseId, "courseName": courseName, "meetingSchedule": courseMeetingSchedule});
+    this.setState({addingClass: "No"});
+    this.getClasses();
   }
 
   renderContent(){
@@ -103,9 +135,76 @@ class App extends React.Component {
       </Container>
       );
     }
-    else if(this.state.loggedInUser != ''){
+    else if(this.state.addingClass != 'No'){
       return(
-        "stuff"
+        <Form onSubmit={this.handleSubmitCreateClass}>
+        <Row className="mb-4" float="middle">
+          <Col md={{ span: 6, offset: 3 }}>
+            <Form.Group controlId="formBasicInt">
+              <Form.Label>Course ID:</Form.Label>
+              <Form.Control value={this.state.courseId} onChange={this.handleChange} name="courseId" type="string" placeholder="Enter Course ID"></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formBasicString">
+              <Form.Label>Course Name:</Form.Label>
+              <Form.Control value={this.state.courseName} onChange={this.handleChange} name="courseName" type="string" placeholder="Enter Course Name"></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Course Meeting Schedule:</Form.Label>
+              <Form.Control value={this.state.courseMeetingSchedule} onChange={this.handleChange} name="courseMeetingSchedule" type="string" placeholder="Enter Course Meeting Schedule"></Form.Control>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="text-center" float="middle">
+          <Col md={{ span: 6, offset: 3 }}>
+            <Button variant="primary" type="submit">Submit</Button>
+          </Col>
+        </Row>
+        </Form>
+      );
+    }
+    else if(this.state.loggedInUser != ''){
+      const listButtons = this.state.courseArray.map((d) => <Button id="course-list" key={d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName}</Button>);
+      return(
+        <Container>
+          <Row>
+            <Col>
+            <Card id="createClass" bg="primary" text="white" style={{ width: '18rem' }}>
+              <Card.Header>Add Class</Card.Header>
+              <Card.Body>
+                <Card.Title>Add a class to your dashboard.</Card.Title>
+                <Button onClick={this.handleAddClass.bind(this)} variant="secondary">+</Button>
+              </Card.Body>
+            </Card>
+            </Col>
+            <Col xs={8}>
+              <Card id="take-attendance" bg="primary" text="white" style={{width: '100%'}}>
+                <Card.Header>
+                  Take Attendance
+                </Card.Header>
+                <Card.Body>
+                  <Button variant="secondary">Take Attendance</Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+            <Card id="manageClass" bg="primary" text="white" style={{height: '36rem', width: '18rem' }}>
+              <Card.Header>Manage Class</Card.Header>
+              <Card.Body>
+                {listButtons}
+              </Card.Body>
+            </Card>
+            </Col>
+            <Col xs={8}>
+            <Card id="manageClass" bg="primary" text="white" style={{height: '36rem', width: '100%' }}>
+              <Card.Header>Recent Meetings</Card.Header>
+              <Card.Body>
+              </Card.Body>
+            </Card>
+            </Col>
+          </Row>
+        </Container>
       );
     }
     else{
