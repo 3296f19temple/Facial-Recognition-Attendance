@@ -106,7 +106,7 @@ class App extends React.Component {
     else if(this.state.loggedInUser != ''){
       return(
         "stuff"
-      )
+      );
     }
     else{
       return(

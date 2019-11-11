@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'rest_framework',
+    'login.apps.LoginConfig',
     'corsheaders',
     'django.contrib.sessions',
     'django.contrib.messages',
