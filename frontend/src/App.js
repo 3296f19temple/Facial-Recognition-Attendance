@@ -38,6 +38,8 @@ class App extends React.Component {
     this.handleSubmitCreateClass = this.handleSubmitCreateClass.bind(this);
     this.handleViewClass = this.handleViewClass.bind(this);
     this.handleSubmitStudentClass = this.handleSubmitStudentClass.bind(this);
+    this.handleTakeAttendance = this.handleTakeAttendance.bind(this);
+
   }
 
   handleChange(event) {
@@ -138,6 +140,13 @@ class App extends React.Component {
     axios.post('http://10.0.0.146:8000/students/', { 'studentId': studentId, 'studentName': studentName, 'uploadImage': uploadImage }).then(console.log("Success"));
     this.setState({ addingStudent: "No" });
     this.getStudents();
+  }
+
+  handleTakeAttendance(event) {
+    this.setState({ takeattendance: "Yes" });
+    this.setState({ viewClass: "No" });
+    this.setState({ addingClass: "No" });
+    console.log(this.state);
   }
 
   renderContent() {
@@ -333,7 +342,7 @@ class App extends React.Component {
                   Take Attendance
                 </Card.Header>
                 <Card.Body>
-                  <Button variant="secondary">Take Attendance</Button>
+                  <Button onClick={this.handleTakeAttendance.bind(this)} variant="secondary">Take Attendance</Button>
                 </Card.Body>
               </Card>
             </Col>
