@@ -1,6 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+
+import {Router, Route, browserHistory, IndexRoute} from "react-router";
+
+import {Root} from './components/Root';
+import {Home} from "./components/Home";
+import {User} from "./components/User";
+
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';

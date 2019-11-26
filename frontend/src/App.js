@@ -40,7 +40,7 @@ class App extends React.Component {
     const username = this.state.username;
     const password = this.state.password;
     event.preventDefault();
-    axios.post('http://97.107.128.107:8007/users/', {'email': email, 'username': username, 'password': password}).then(console.log("Success"));
+    axios.post('http://10.0.0.146:8000/users/', {'email': email, 'username': username, 'password': password}).then(console.log("Success"));
   }
 
   setLoggedInUser(v){
@@ -53,7 +53,7 @@ class App extends React.Component {
     const username = this.state.username;
     const password = this.state.password;
     event.preventDefault();
-    axios.get('http://97.107.128.107:8007/users/').then(responseArr => {
+    axios.get('http://10.0.0.146:8000/users/').then(responseArr => {
       for(var i = 0; i < responseArr.data.length; i++){
         if(responseArr.data[i].username === username && responseArr.data[i].password === password){
           this.setLoggedInUser(username);
@@ -82,7 +82,7 @@ class App extends React.Component {
   }
 
   getClasses(){
-    axios.get('http://97.107.128.107:8007/classes/').then(responseArr => {
+    axios.get('http://10.0.0.146:8000/classes/').then(responseArr => {
       this.setClassState(responseArr.data);
     });
   }
@@ -95,7 +95,7 @@ class App extends React.Component {
     const courseId = this.state.courseId;
     const courseName = this.state.courseName;
     const courseMeetingSchedule = this.state.courseMeetingSchedule;
-    axios.post('http://97.107.128.107:8007/classes/', {"courseId": courseId, "courseName": courseName, "meetingSchedule": courseMeetingSchedule});
+    axios.post('http://10.0.0.146:8000/classes/', {"courseId": courseId, "courseName": courseName, "meetingSchedule": courseMeetingSchedule});
     this.setState({addingClass: "No"});
     this.getClasses();
   }
