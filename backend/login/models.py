@@ -12,7 +12,7 @@ class Classes(models.Model):
         verbose_name_plural = "Classes"
 
     def __str__(self):
-        return '%d' %(self.courseId)
+        return '%s' %(self.courseId)
 
 class Students(models.Model):
     courseId = models.ForeignKey(Classes, on_delete=models.CASCADE)
