@@ -7,6 +7,10 @@ class Classes(models.Model):
     meetingSchedule = models.TextField()
     username  =  models.ForeignKey(User, on_delete=models.CASCADE)
 
+    class Meta:
+        # otherwise we get "Studentss in admin"
+        verbose_name_plural = "Classes"
+
     def __str__(self):
         return '%d %s' %(self.courseId, username)
 
@@ -15,7 +19,11 @@ class Students(models.Model):
     studentName  = models.TextField()
     school_id = models.CharField(max_length = 200)
     attendence = models.CharField(max_length = 800)
-    studentPicture = models.FileField(upload_to = 'student_pic',blank=False, null=False, default=1)
+    studentPicture = models.FileField(upload_to = 'students/',blank=False, null=False, default=1)
+
+    class Meta:
+        # otherwise we get "Studentss in admin"
+        verbose_name_plural = "Students"
 
     def __str__(self):
         return '%s' %(self.courseId)
