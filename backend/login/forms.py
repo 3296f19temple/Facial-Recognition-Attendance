@@ -6,8 +6,8 @@ class createAdministrationUserForm(forms.Form):
     password = forms.TextField()
 '''
 
-class createStrudent(forms.Form):
-    first_name = models.TextField()
-    last_name = models.TextField()
-    school_id = models.CharField()
-    attendence = models.CharField()
+# class createStrudent(forms.Form):
+#     first_name = models.TextField()
+#     last_name = models.TextField()
+#     school_id = models.CharField()
+#     attendence = models.CharField()
