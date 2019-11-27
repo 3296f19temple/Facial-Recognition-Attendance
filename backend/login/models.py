@@ -6,7 +6,7 @@ class Classes(models.Model):
     courseName = models.TextField()
     meetingSchedule = models.TextField()
 
-    userid  =  models.ForeignKey(User, on_delete=models.CASCADE)
+    username  =  models.ForeignKey(User, on_delete=models.CASCADE)
 
 
     
