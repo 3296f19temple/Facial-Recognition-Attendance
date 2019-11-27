@@ -12,14 +12,14 @@ class Classes(models.Model):
         verbose_name_plural = "Classes"
 
     def __str__(self):
-        return '%d %s' %(self.courseId, username)
+        return '%d' %(self.courseId)
 
 class Students(models.Model):
     courseId = models.ForeignKey(Classes, on_delete=models.CASCADE)
     studentName  = models.TextField()
     school_id = models.CharField(max_length = 200)
     attendence = models.CharField(max_length = 800)
-    studentPicture = models.FileField(upload_to = 'students/',blank=False, null=False, default=1)
+    studentPicture = models.ImageField(upload_to = 'students/',blank=False, null=False, default=1)
 
     class Meta:
         # otherwise we get "Studentss in admin"
