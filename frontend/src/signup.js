@@ -1,8 +1,8 @@
 import React from 'react';
-import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router-dom';
+import { Navbar, Container, Jumbotron, Form, Button, Row, Col, Card } from 'react-bootstrap';
 
-
-export class signup extends React.Component {
+export class Signup extends React.Component {
     render() {
         const renderWhat = this.state.signUpLogIn;
         return (
