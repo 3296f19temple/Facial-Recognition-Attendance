@@ -5,10 +5,8 @@ class Classes(models.Model):
     courseId = models.CharField(max_length = 10)
     courseName = models.TextField()
     meetingSchedule = models.TextField()
-    username  =  models.ForeignKey(User, on_delete=models.CASCADE)
 
-    
-
+    userid  =  models.ForeignKey(User, on_delete=models.CASCADE)
 
 
     
@@ -26,8 +24,6 @@ class Students(models.Model):
     studentPicture = models.ImageField(upload_to = 'students/',blank=False, null=False, default=1)
 
    
-
-
 
 
     def __str__(self):
