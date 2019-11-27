@@ -9,35 +9,40 @@
 // axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 // axios.defaults.xsrfCookieName = "csrftoken";
 
-// class App extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       email: '',
-//       username: '',
-//       password: '',
-//       signUpLogIn: 'Sign Up',
-//       loggedInUser: '',
-//       courseArray: [],
-//       addingClass: 'No',
-//       viewClass: 'No',
-//       courseId: '',
-//       courseName: '',
-//       meetingSchedule: '',
-//       studentId: '',
-//       studentName: '',
-//       uploadImage: ''
 
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      username: '',
+      password: '',
+      signUpLogIn: 'Sign Up',
+      loggedInUser: '',
+      courseArray: [],
+      addingClass: 'No',
+      viewClass: 'No',
+      courseId: '',
+      courseName: '',
+      meetingSchedule: '',
+      studentId: '',
+      studentName: '',
+      uploadImage: '',
+      calculateAttendance: '',
+      takeattendance: 'No'
 
-//     };
-//     this.handleChange = this.handleChange.bind(this);
-//     this.handleSubmit = this.handleSubmit.bind(this);
-//     this.handleSubmitLogIn = this.handleSubmitLogIn.bind(this);
-//     this.handleAddClass = this.handleAddClass.bind(this);
-//     this.handleSubmitCreateClass = this.handleSubmitCreateClass.bind(this);
-//     this.handleViewClass = this.handleViewClass.bind(this);
-//     this.handleSubmitStudentClass = this.handleSubmitStudentClass.bind(this);
-//   }
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmitLogIn = this.handleSubmitLogIn.bind(this);
+    this.handleAddClass = this.handleAddClass.bind(this);
+    this.handleSubmitCreateClass = this.handleSubmitCreateClass.bind(this);
+    this.handleViewClass = this.handleViewClass.bind(this);
+    this.handleSubmitStudentClass = this.handleSubmitStudentClass.bind(this);
+    this.handleTakeAttendance = this.handleTakeAttendance.bind(this);
+
+  }
+
 
 //   handleChange(event) {
 //     this.setState({ [event.target.name]: event.target.value });
@@ -137,6 +142,50 @@
 //     axios.post('http://10.0.0.146:8000/students/', { 'studentId': studentId, 'studentName': studentName, 'uploadImage': uploadImage }).then(console.log("Success"));
 //     this.setState({ addingStudent: "No" });
 //     this.getStudents();
+//   }
+
+//   renderContent() {
+//     if (this.state.signUpLogIn === 'Sign Up') {
+//       return (
+//         <Container>
+//           <Row className="text-center mb-5">
+//             <Col md={{ span: 6, offset: 3 }}>
+//               <h1>Create Your Account</h1>
+//             </Col>
+//           </Row>
+//           <Form onSubmit={this.handleSubmit}>
+//             <Row className="mb-4" float="middle">
+//               <Col md={{ span: 6, offset: 3 }}>
+//                 <Form.Group controlId="formBasicEmail">
+//                   <Form.Label>Email:</Form.Label>
+//                   <Form.Control value={this.state.email} onChange={this.handleChange} name="email" type="email" placeholder="Enter email"></Form.Control>
+//                 </Form.Group>
+//                 <Form.Group controlId="formBasicString">
+//                   <Form.Label>Username:</Form.Label>
+//                   <Form.Control value={this.state.username} onChange={this.handleChange} name="username" type="username" placeholder="Enter username"></Form.Control>
+//                 </Form.Group>
+//                 <Form.Group controlId="formBasicPassword">
+//                   <Form.Label>Password:</Form.Label>
+//                   <Form.Control value={this.state.password} onChange={this.handleChange} name="password" type="password" placeholder="Enter password"></Form.Control>
+//                 </Form.Group>
+//               </Col>
+//             </Row>
+//             <Row className="text-center" float="middle">
+//               <Col md={{ span: 6, offset: 3 }}>
+//                 <Button variant="primary" type="submit">Submit</Button>
+//               </Col>
+//             </Row>
+//           </Form>
+//         </Container>
+//       );
+//     }
+//     else if (this.state.viewClass != 'No') {
+//       const listDetail = this.state.courseArray.map((d) => <Card.Text id="course-detail" key={d.courseId, d.courseName, d.meetingSchedule} variant="secondary">{"Course ID: " + d.courseId + " " + "Course Name: " + d.courseName + " " + "Meeting Schedule: " + d.meetingSchedule}</Card.Text>);
+//   handleTakeAttendance(event) {
+//     this.setState({ takeattendance: "Yes" });
+//     this.setState({ viewClass: "No" });
+//     this.setState({ addingClass: "No" });
+//     console.log(this.state);
 //   }
 
 //   renderContent() {
