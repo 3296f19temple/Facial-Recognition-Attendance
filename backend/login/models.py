@@ -1,5 +1,8 @@
 from django.db import models
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
+
+fs = "students/"
 
 class Classes(models.Model):
     courseId = models.IntegerField()
@@ -19,7 +22,7 @@ class Students(models.Model):
     studentName  = models.TextField()
     school_id = models.CharField(max_length = 200)
     attendence = models.CharField(max_length = 800)
-    studentPicture = models.ImageField(upload_to = 'students/',blank=False, null=False, default=1)
+    studentPicture = models.ImageField(upload_to = fs ,blank=False, null=False, default=1)
 
     class Meta:
         # otherwise we get "Studentss in admin"
