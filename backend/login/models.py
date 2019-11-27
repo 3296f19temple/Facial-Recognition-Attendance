@@ -5,10 +5,11 @@ class Classes(models.Model):
     courseId = models.CharField(max_length = 10)
     courseName = models.TextField()
     meetingSchedule = models.TextField()
-
     username  =  models.ForeignKey(User, on_delete=models.CASCADE)
 
-
+    class Meta:
+        # otherwise we get "Studentss in admin"
+        verbose_name_plural = "Classes"
     
     def __str__(self):
         return self.courseId
@@ -23,8 +24,9 @@ class Students(models.Model):
     attendence = models.CharField(max_length = 800)
     studentPicture = models.ImageField(upload_to = 'students/',blank=False, null=False, default=1)
 
-   
-
+    class Meta:
+        # otherwise we get "Studentss in admin"
+        verbose_name_plural = "Students"
 
     def __str__(self):
         return self.courseId
