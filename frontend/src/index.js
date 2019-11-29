@@ -22,7 +22,7 @@ import { Navbar, Container, Jumbotron, Form, Button, Row, Col, Card } from 'reac
 
 
 import { Root } from "./Root";
-import { homepage } from "./homepage";
+import { Homepage } from "./homepage";
 import { signup } from "./signup";
 
 
@@ -37,12 +37,36 @@ class App extends React.Component {
         this.state = {
             email: null,
             username: null,
-            password: null
-        };
-    }
+            password: null,
+            signUpLogIn: 'Sign Up',
+            loggedInUser: '',
+            courseArray: [],
+            addingClass: 'No',
+            viewClass: 'No',
+            courseId: '',
+            courseName: '',
+            meetingSchedule: '',
+            studentId: '',
+            studentName: '',
+            uploadImage: '',
+            calculateAttendance: '',
+            takeattendance: 'No'
+      
+          };
+        //   this.handleChange = this.handleChange.bind(this);
+        //   this.handleSubmit = this.handleSubmit.bind(this);
+        //   this.handleSubmitLogIn = this.handleSubmitLogIn.bind(this);
+        //   this.handleAddClass = this.handleAddClass.bind(this);
+        //   this.handleSubmitCreateClass = this.handleSubmitCreateClass.bind(this);
+        //   this.handleViewClass = this.handleViewClass.bind(this);
+        //   this.handleSubmitStudentClass = this.handleSubmitStudentClass.bind(this);
+        //   this.handleTakeAttendance = this.handleTakeAttendance.bind(this);
+      
+        }
+
+
     
-
-
+  
     render() {
         const {
             email,
@@ -50,13 +74,16 @@ class App extends React.Component {
             password
         } = this.state;
 
+
         return (<div>
             <Header></Header>
-            <Router><Login username={username} password={password}></Login></Router>
+            <Router><Login email = {email} username={username} password={password}></Login></Router>
+            
         </div>
-        );
-
+        ); 
     }
+
+
     // async componentDidMount() {
     //     axios.get('http://10.0.0.146:8000/users/').then(responseArr => {
     //               for (var i = 0; i < responseArr.data.length; i++) {

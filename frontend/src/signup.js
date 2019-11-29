@@ -4,7 +4,8 @@ import { Navbar, Container, Jumbotron, Form, Button, Row, Col, Card } from 'reac
 
 export class Signup extends React.Component {
     render() {
-        const renderWhat = this.state.signUpLogIn;
+        const {email, username, password} = this.props;
+        // const renderWhat = this.state.signUpLogIn;
         return (
             <Container>
                 <Row className="text-center mb-5">
@@ -32,6 +33,9 @@ export class Signup extends React.Component {
                     <Row className="text-center" float="middle">
                         <Col md={{ span: 6, offset: 3 }}>
                             <Button variant="primary" type="submit">Submit</Button>
+                        </Col>
+                        <Col md={{ span: 6, offset: 3 }}>
+                            <Button onClick = {this.handleChange} variant="primary" type="submit">Signin</Button>
                         </Col>
                     </Row>
                 </Form>

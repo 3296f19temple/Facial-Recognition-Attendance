@@ -10,7 +10,7 @@ import { Navbar, Container, Jumbotron, Form, Button, Row, Col, Card } from 'reac
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom';
 
-export class homepage extends React.Component {
+ export class Homepage extends React.Component {
 
     render() {
         //const listButtons = this.state.courseArray.map((d) => <Button onClick={this.handleViewClass.bind(this)} id="course-list" key={d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName}</Button>);

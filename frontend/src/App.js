@@ -10,38 +10,38 @@
 // axios.defaults.xsrfCookieName = "csrftoken";
 
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      username: '',
-      password: '',
-      signUpLogIn: 'Sign Up',
-      loggedInUser: '',
-      courseArray: [],
-      addingClass: 'No',
-      viewClass: 'No',
-      courseId: '',
-      courseName: '',
-      meetingSchedule: '',
-      studentId: '',
-      studentName: '',
-      uploadImage: '',
-      calculateAttendance: '',
-      takeattendance: 'No'
+// class App extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       email: '',
+//       username: '',
+//       password: '',
+//       signUpLogIn: 'Sign Up',
+//       loggedInUser: '',
+//       courseArray: [],
+//       addingClass: 'No',
+//       viewClass: 'No',
+//       courseId: '',
+//       courseName: '',
+//       meetingSchedule: '',
+//       studentId: '',
+//       studentName: '',
+//       uploadImage: '',
+//       calculateAttendance: '',
+//       takeattendance: 'No'
 
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleSubmitLogIn = this.handleSubmitLogIn.bind(this);
-    this.handleAddClass = this.handleAddClass.bind(this);
-    this.handleSubmitCreateClass = this.handleSubmitCreateClass.bind(this);
-    this.handleViewClass = this.handleViewClass.bind(this);
-    this.handleSubmitStudentClass = this.handleSubmitStudentClass.bind(this);
-    this.handleTakeAttendance = this.handleTakeAttendance.bind(this);
+//     };
+//     this.handleChange = this.handleChange.bind(this);
+//     this.handleSubmit = this.handleSubmit.bind(this);
+//     this.handleSubmitLogIn = this.handleSubmitLogIn.bind(this);
+//     this.handleAddClass = this.handleAddClass.bind(this);
+//     this.handleSubmitCreateClass = this.handleSubmitCreateClass.bind(this);
+//     this.handleViewClass = this.handleViewClass.bind(this);
+//     this.handleSubmitStudentClass = this.handleSubmitStudentClass.bind(this);
+//     this.handleTakeAttendance = this.handleTakeAttendance.bind(this);
 
-  }
+//   }
 
 
 //   handleChange(event) {
@@ -409,7 +409,8 @@ class App extends React.Component {
 //           {this.renderContent()}
 //         </Jumbotron>
 //       </div>
-//     );
+//     );ls
+
 //   }
 // }
 
