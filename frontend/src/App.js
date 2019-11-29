@@ -4,7 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
 import querystring from 'querystring';
-import { Navbar, Container, Jumbotron, Form, Button, Row, Col, Card } from 'react-bootstrap';
+import { Image, Navbar, Container, Jumbotron, Form, Button, Row, Col, Card } from 'react-bootstrap';
 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
@@ -13,21 +13,25 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: null,
       email: '',
       username: '',
       password: '',
       signUpLogIn: 'Sign Up',
       loggedInUser: '',
       courseArray: [],
+      studentArray: [],
       addingClass: 'No',
       viewClass: 'No',
       selectedCourse: [],
       courseId: '',
+      studentCourseId: '',
       courseName: '',
       meetingSchedule: '',
-      studentId: '',
       studentName: '',
-      uploadImage: ''
+      school_id: '',
+      attendence: '',
+      studentPicture: null
 
 
     };
@@ -54,24 +58,27 @@ class App extends React.Component {
     axios.post('http://10.0.0.146:8000/users/', { 'email': email, 'username': username, 'password': password }).then(console.log("Success"));
   }
 
-  setLoggedInUser(v) {
+  setLoggedInUser(v, id) {
     this.setState({ loggedInUser: v });
+    this.setState({ id: id });
   }
 
   handleSubmitLogIn(event) {
     const email = this.state.email;
     const username = this.state.username;
     const password = this.state.password;
+    const id = this.state.id;
     event.preventDefault();
     axios.get('http://10.0.0.146:8000/users/').then(responseArr => {
       for (var i = 0; i < responseArr.data.length; i++) {
         if (responseArr.data[i].username === username && responseArr.data[i].password === password) {
-          this.setLoggedInUser(username);
+          this.setLoggedInUser(username, responseArr.data[i].id);
           break;
         }
       }
     });
     this.getClasses();
+    this.getStudents();
   }
 
 
@@ -94,7 +101,8 @@ class App extends React.Component {
 
   setStudentState(element) {
     this.setState({ studentArray: element });
-    console.log(element);
+    console.log("hello");
+    console.log(this.state.studentArray);
   }
 
   getClasses() {
@@ -104,44 +112,51 @@ class App extends React.Component {
   }
 
   //get students
-  getStduents() {
+  getStudents() {
     axios.get('http://10.0.0.146:8000/students/').then(responseArr => {
       this.setStudentState(responseArr.data);
+      console.log(responseArr.data);
+
     });
   }
 
   handleAddClass(event) {
     this.setState({ addingClass: "Yes" });
     console.log(this.state);
+
   }
 
   handleViewClass(event, d) {
- 
+
     this.setState({ viewClass: "Yes" });
-    
     this.setState({ addingClass: "No" });
-    this.setState({selectedCourse: d});
+    this.setState({ selectedCourse: d });
     console.log(d);
     console.log(this.state.selectedCourse);
+    console.log(this.state.studentArray)
     // this.setState({courseId: setcourseId})
-   
+
   }
 
   handleSubmitCreateClass(event) {
     const courseId = this.state.courseId;
     const courseName = this.state.courseName;
     const meetingSchedule = this.state.meetingSchedule;
-    axios.post('http://10.0.0.146:8000/classes/', { "courseId": courseId, "courseName": courseName, "meetingSchedule": meetingSchedule });
+
+
+    axios.post('http://10.0.0.146:8000/classes/', { "courseId": courseId, "courseName": courseName, "meetingSchedule": meetingSchedule, "username": this.state.id });
     this.setState({ addingClass: "No" });
     this.getClasses();
   }
 
   //submit for enroll student 
   handleSubmitStudentClass(event) {
-    const studentId = this.state.studentId;
+    const studentCourseId = this.state.courseArray.courseId;
     const studentName = this.state.studentName;
-    const uploadImage = this.state.uploadImage;
-    axios.post('http://10.0.0.146:8000/students/', { 'studentId': studentId, 'studentName': studentName, 'uploadImage': uploadImage }).then(console.log("Success"));
+    const school_id = this.state.school_id;
+    const attendence = this.state.attendence;
+    const studentPicture = this.state.studentPicture;
+    axios.post('http://10.0.0.146:8000/students/', { 'studentCourseId': studentCourseId, 'studentName': studentName, 'school_id': school_id, 'attendence': attendence, 'studentPicture': studentPicture }).then(console.log("Success"));
     this.setState({ addingStudent: "No" });
     this.getStudents();
   }
@@ -184,7 +199,7 @@ class App extends React.Component {
     else if (this.state.viewClass != 'No') {
       const listDetail = this.state.courseArray.map((d) => <Card.Text id="course-detail" key={d.courseId, d.courseName, d.meetingSchedule} variant="secondary">{"Course ID: " + d.courseId + " " + "Course Name: " + d.courseName + " " + "Meeting Schedule: " + d.meetingSchedule}</Card.Text>);
 
-     
+      const studentEnrolledList = this.state.studentArray.map((f) => <Card id="viewClass" style={{ height: '5rem', width: '100%' }}><Card.Text id="student-detail" key={f.studentName, f.school_id, f.attendence, f.studentPicture} variant="secondary">{"Student Name: " + f.studentName + " " + "Student ID: " + f.school_id + " " + "Student Attendance : " + f.attendence}</Card.Text></Card>);
       return (
         <Container>
           <Row>
@@ -193,7 +208,7 @@ class App extends React.Component {
               <Card.Body style={{ alignContent: "center" }}>
                 <Row>
                   <Card id="viewClass" style={{ height: '5rem', width: '100%' }}>
-                  <Card.Text id="course-detail" key={this.state.selectedCourse.courseId} variant="secondary">{"Course ID: " + this.state.selectedCourse.courseId + " " + "Course Name: " + this.state.selectedCourse.courseName + " " + "Meeting Schedule: " + this.state.selectedCourse.meetingSchedule}</Card.Text>
+                    <Card.Text id="course-detail" key={this.state.selectedCourse.courseId} variant="secondary">{"Course ID: " + this.state.selectedCourse.courseId + " " + "Course Name: " + this.state.selectedCourse.courseName + " " + "Meeting Schedule: " + this.state.selectedCourse.meetingSchedule + this.state.selectedCourse.username}</Card.Text>
                   </Card>
                 </Row>
 
@@ -203,32 +218,59 @@ class App extends React.Component {
 
           <Row>
             <Col >
-              <Card id="manageClass" bg="primary" text="white" style={{ height: '25rem', width: '100%' }}>
+              <Card id="manageClass" bg="primary" text="white" style={{ height: '28rem', width: '100%' }}>
                 <Card.Header>Students Enrolled</Card.Header>
+
                 <Card.Body>
+                  <Row>
+
+                    {studentEnrolledList}
+
+                  </Row>
                 </Card.Body>
               </Card>
             </Col>
 
             <Col >
-              <Card id="manageClass" bg="primary" text="white" style={{ height: '25rem', width: '100%' }}>
+              <Card id="manageClass" bg="primary" text="white" style={{ height: '28rem', width: '100%' }}>
                 <Card.Header>Enroll Student</Card.Header>
                 <Card.Body>
                   <Row className="mb-4" float="middle">
                     <Col md={{ span: 6, offset: 3 }}>
                       <Form onSubmit={this.handleSubmitStudentClass}>
-                        <Form.Group controlId="formBasicStudentId">
-                          <Form.Label>Student ID</Form.Label>
-                          <Form.Control value={this.state.studentId} onChange={this.handleChange} name="studentId" type="string " placeholder="Enter Student ID"></Form.Control>
-                        </Form.Group>
+
                         <Form.Group controlId="formBasicStudentName">
                           <Form.Label>Student Name:</Form.Label>
                           <Form.Control value={this.state.studentName} onChange={this.handleChange} name="studentName" type="string" placeholder="Enter Student Name"></Form.Control>
                         </Form.Group>
-                        {/* <Form.Group controlId="formBasicUploadImage">
-                          <Form.Label>upload</Form.Label>
+                        <Form.Group controlId="formBasicStudentId">
+                          <Form.Label>Student ID</Form.Label>
+                          <Form.Control value={this.state.school_id} onChange={this.handleChange} name="school_id" type="string " placeholder="Enter Student ID"></Form.Control>
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicUploadImage">
+                          <Form.Label>attendance</Form.Label>
                           <Form.Control value={this.state.uploadImage} onChange={this.handleChange} name="" type="" placeholder="uploadImage"></Form.Control>
-                        </Form.Group> */}
+                        </Form.Group>
+
+                        <div className="input-group">
+                          <div className="input-group-prepend">
+                            <span className="input-group-text" id="inputGroupFileAddon01">
+                              Upload
+                          </span>
+                          </div>
+                          <div className="custom-file">
+                            <input
+                              type="file"
+                              className="custom-file-input"
+                              id="inputGroupFile01"
+                              aria-describedby="inputGroupFileAddon01"
+                            />
+                            <label className="custom-file-label" htmlFor="inputGroupFile01">
+                              Choose file
+                          </label>
+                          </div>
+                        </div>
 
                         <Row className="text-center" float="middle">
                           <Col md={{ span: 6, offset: 3 }}>
@@ -274,11 +316,11 @@ class App extends React.Component {
       );
     }
     else if (this.state.loggedInUser !== '') {
-      const listButtons = 
-      
-      this.state.courseArray.map((d) =>  <Button onClick={this.handleViewClass.bind(this, d)} id="course-list" key={d, d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName}</Button>);
-      
-      
+      const listButtons =
+
+        this.state.courseArray.map((d) => <Button onClick={this.handleViewClass.bind(this, d)} id="course-list" key={d, d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName}</Button>);
+
+
 
       return (
         <Container>
