@@ -21,6 +21,7 @@ class App extends React.Component {
       courseArray: [],
       addingClass: 'No',
       viewClass: 'No',
+      selectedCourse: [],
       courseId: '',
       courseName: '',
       meetingSchedule: '',
@@ -30,12 +31,14 @@ class App extends React.Component {
 
 
     };
+
+    const d = [];
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmitLogIn = this.handleSubmitLogIn.bind(this);
     this.handleAddClass = this.handleAddClass.bind(this);
     this.handleSubmitCreateClass = this.handleSubmitCreateClass.bind(this);
-    this.handleViewClass = this.handleViewClass.bind(this);
+    this.handleViewClass = this.handleViewClass.bind(this, d);
     this.handleSubmitStudentClass = this.handleSubmitStudentClass.bind(this);
   }
 
@@ -112,12 +115,16 @@ class App extends React.Component {
     console.log(this.state);
   }
 
-  handleViewClass(event) {
+  handleViewClass(event, d) {
+ 
     this.setState({ viewClass: "Yes" });
+    
     this.setState({ addingClass: "No" });
-    console.log(this.state.viewClass);
+    this.setState({selectedCourse: d});
+    console.log(d);
+    console.log(this.state.selectedCourse);
     // this.setState({courseId: setcourseId})
-    console.log(this.state);
+   
   }
 
   handleSubmitCreateClass(event) {
@@ -177,7 +184,7 @@ class App extends React.Component {
     else if (this.state.viewClass != 'No') {
       const listDetail = this.state.courseArray.map((d) => <Card.Text id="course-detail" key={d.courseId, d.courseName, d.meetingSchedule} variant="secondary">{"Course ID: " + d.courseId + " " + "Course Name: " + d.courseName + " " + "Meeting Schedule: " + d.meetingSchedule}</Card.Text>);
 
-      console.log(listDetail);
+     
       return (
         <Container>
           <Row>
@@ -186,7 +193,7 @@ class App extends React.Component {
               <Card.Body style={{ alignContent: "center" }}>
                 <Row>
                   <Card id="viewClass" style={{ height: '5rem', width: '100%' }}>
-                    {listDetail}
+                  <Card.Text id="course-detail" key={this.state.selectedCourse.courseId} variant="secondary">{"Course ID: " + this.state.selectedCourse.courseId + " " + "Course Name: " + this.state.selectedCourse.courseName + " " + "Meeting Schedule: " + this.state.selectedCourse.meetingSchedule}</Card.Text>
                   </Card>
                 </Row>
 
@@ -218,10 +225,10 @@ class App extends React.Component {
                           <Form.Label>Student Name:</Form.Label>
                           <Form.Control value={this.state.studentName} onChange={this.handleChange} name="studentName" type="string" placeholder="Enter Student Name"></Form.Control>
                         </Form.Group>
-                        <Form.Group controlId="formBasicUploadImage">
+                        {/* <Form.Group controlId="formBasicUploadImage">
                           <Form.Label>upload</Form.Label>
                           <Form.Control value={this.state.uploadImage} onChange={this.handleChange} name="" type="" placeholder="uploadImage"></Form.Control>
-                        </Form.Group>
+                        </Form.Group> */}
 
                         <Row className="text-center" float="middle">
                           <Col md={{ span: 6, offset: 3 }}>
@@ -267,7 +274,12 @@ class App extends React.Component {
       );
     }
     else if (this.state.loggedInUser !== '') {
-      const listButtons = this.state.courseArray.map((d) => <Button onClick={this.handleViewClass.bind(this)} id="course-list" key={d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName}</Button>);
+      const listButtons = 
+      
+      this.state.courseArray.map((d) =>  <Button onClick={this.handleViewClass.bind(this, d)} id="course-list" key={d, d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName}</Button>);
+      
+      
+
       return (
         <Container>
           <Row>
