@@ -240,19 +240,20 @@ class App extends React.Component {
                       <Form onSubmit={this.handleSubmitStudentClass}>
 
                         <Form.Group controlId="formBasicStudentName">
-                          <Form.Label>Student Name:</Form.Label>
+                          <Form.Label>Student Name: </Form.Label>
                           <Form.Control value={this.state.studentName} onChange={this.handleChange} name="studentName" type="string" placeholder="Enter Student Name"></Form.Control>
                         </Form.Group>
                         <Form.Group controlId="formBasicStudentId">
-                          <Form.Label>Student ID</Form.Label>
+                          <Form.Label>Student ID: </Form.Label>
                           <Form.Control value={this.state.school_id} onChange={this.handleChange} name="school_id" type="string " placeholder="Enter Student ID"></Form.Control>
                         </Form.Group>
-
+{/* 
                         <Form.Group controlId="formBasicUploadImage">
-                          <Form.Label>attendance</Form.Label>
+                          <Form.Label>Attendance: </Form.Label>
                           <Form.Control value={this.state.uploadImage} onChange={this.handleChange} name="" type="" placeholder="uploadImage"></Form.Control>
-                        </Form.Group>
-
+                        </Form.Group> */}
+                        <Form.Group>
+                        <Form.Label>Upload Image: </Form.Label>
                         <div className="input-group">
                           <div className="input-group-prepend">
                             <span className="input-group-text" id="inputGroupFileAddon01">
@@ -271,6 +272,7 @@ class App extends React.Component {
                           </label>
                           </div>
                         </div>
+                        </Form.Group>
 
                         <Row className="text-center" float="middle">
                           <Col md={{ span: 6, offset: 3 }}>
