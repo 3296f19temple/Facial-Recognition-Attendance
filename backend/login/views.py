@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets
-from login.serializers import UserSerializer, ClassesSerializer
-from login.models import Classes
+from login.serializers import UserSerializer, ClassesSerializer, StudentSerializer
+from login.models import Classes, Students
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -15,3 +15,6 @@ class ClassesView(viewsets.ModelViewSet):
     queryset = Classes.objects.all()
     serializer_class = ClassesSerializer
 
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Students.objects.all()
+    serializer_class = StudentSerializer
