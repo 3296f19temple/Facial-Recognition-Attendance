@@ -4,7 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
 import querystring from 'querystring';
-import { Image, Navbar, Container, Jumbotron, Form, Button, Row, Col, Card } from 'react-bootstrap';
+import { Dropdown, DropdownButton, Image, Navbar, Container, Jumbotron, Form, Button, Row, Col, Card } from 'react-bootstrap';
 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
@@ -35,6 +35,7 @@ class App extends React.Component {
       studentPicture: null,
 
       takeAttendance: '',
+      courseSectionArray: [],
 
       viewRecentClassMeeting: ''
 
@@ -51,6 +52,7 @@ class App extends React.Component {
     this.handleSubmitStudentClass = this.handleSubmitStudentClass.bind(this);
     this.handleAddAttendance = this.handleAddAttendance.bind(this);
     this.handleViewRecentClassMeeting = this.handleViewRecentClassMeeting.bind(this);
+
   }
 
   handleChange(event) {
@@ -130,7 +132,6 @@ class App extends React.Component {
   handleAddClass(event) {
     this.setState({ addingClass: "Yes" });
     console.log(this.state);
-
   }
 
   handleAddAttendance(event) {
@@ -143,7 +144,6 @@ class App extends React.Component {
     this.state({ addingClass: "No" });
   }
   handleViewClass(event, d) {
-
     this.setState({ viewClass: "Yes" });
     this.setState({ addingClass: "No" });
     this.setState({ selectedCourse: d });
@@ -332,27 +332,29 @@ class App extends React.Component {
         </Form>
       );
     } else if (this.state.takeAttendance === 'Yes') {
-      const listDetail = this.state.courseArray.map((d) => <Card.Text id="course-detail" key={d.courseId, d.courseName, d.meetingSchedule} variant="secondary">{"Course ID: " + d.courseId + " " + "Course Name: " + d.courseName + " " + "Meeting Schedule: " + d.meetingSchedule}</Card.Text>);
-
-      const studentEnrolledList = this.state.studentArray.map((f) => <Card id="viewClass" style={{ height: '5rem', width: '100%' }}><Card.Text id="student-detail" key={f.studentName, f.school_id, f.attendence, f.studentPicture} variant="secondary">{"Student Name: " + f.studentName + " " + "Student ID: " + f.school_id + " " + "Student Attendance : " + f.attendence}</Card.Text></Card>);
+      const coursesArr = this.state.courseArray.map((d) => <Dropdown.Item href="#/action-1" >replace Course</Dropdown.Item>);
+      const courseSectionArr = this.state.courseSectionArray.map((e) => <Dropdown.Item href="">replace  </Dropdown.Item>);
       return (
-
-
         <Container>
+          <Row>
+            <Button onClick = "" variant="secondary" type="submit">Save Attendance</Button>
+          </Row>
           <Row>
             <Card id="createClass" bg="primary" text="white" style={{ height: '15rem', width: '100%' }}>
               <Card.Header>Course Selection</Card.Header>
               <Card.Body style={{ alignContent: "center" }}>
                 <Row>
-                  <Card id="viewClass" style={{ height: '5rem', width: '100%' }}>
-                    <Card.Text id="course-detail" key={this.state.selectedCourse.courseId} variant="secondary">{"Course ID: " + this.state.selectedCourse.courseId + " " + "Course Name: " + this.state.selectedCourse.courseName + " " + "Meeting Schedule: " + this.state.selectedCourse.meetingSchedule + this.state.selectedCourse.username}</Card.Text>
-                  </Card>
-                </Row>
+                  <DropdownButton variant="secondary" id="dropdown-basic-button" title="Course" >
+                    {coursesArr}
+                  </DropdownButton>
 
+                  <DropdownButton variant="secondary" id="dropdown-basic-button" title="Meeting Date/Time" >
+                    {courseSectionArr}
+                  </DropdownButton>
+                </Row>
               </Card.Body>
             </Card>
           </Row>
-
           <Row>
             <Col >
               <Card id="manageClass" bg="primary" text="white" style={{ height: '28rem', width: '100%' }}>
@@ -361,42 +363,37 @@ class App extends React.Component {
                 <Card.Body>
                   <Row>
 
-                    <Form onSubmit={this.handleSubmitStudentClass}>
-
-
-                      {/* 
-<Form.Group controlId="formBasicUploadImage">
-  <Form.Label>Attendance: </Form.Label>
-  <Form.Control value={this.state.uploadImage} onChange={this.handleChange} name="" type="" placeholder="uploadImage"></Form.Control>
-</Form.Group> */}
-                      <Form.Group>
-                        <Form.Label>Upload Image: </Form.Label>
-                        <div className="input-group">
-                          <div className="input-group-prepend">
-                            <span className="input-group-text" id="inputGroupFileAddon01">
-                              Upload
-  </span>
+                    <Col md={{ span: 9, offset: 1 }}>
+                      <Form id="form-column" onSubmit="">
+                        <Form.Group>
+                          <Form.Label>Upload Image: </Form.Label>
+                          <div className="input-group" >
+                            <div className="input-group-prepend">
+                              <span className="input-group-text" id="inputGroupFileAddon01">
+                                Upload
+                           </span>
+                            </div>
+                            <div className="custom-file">
+                              <input
+                                type="file"
+                                className="custom-file-input"
+                                id="inputGroupFile01"
+                                aria-describedby="inputGroupFileAddon01"
+                              />
+                              <label className="custom-file-label" htmlFor="inputGroupFile01">
+                                Choose file
+                            </label>
+                            </div>
                           </div>
-                          <div className="custom-file">
-                            <input
-                              type="file"
-                              className="custom-file-input"
-                              id="inputGroupFile01"
-                              aria-describedby="inputGroupFileAddon01"
-                            />
-                            <label className="custom-file-label" htmlFor="inputGroupFile01">
-                              Choose file
-  </label>
-                          </div>
-                        </div>
-                      </Form.Group>
+                        </Form.Group>
 
-                      <Row className="text-center" float="middle">
-                        <Col md={{ span: 6, offset: 3 }}>
-                          <Button variant="primary" type="submit">Enroll</Button>
-                        </Col>
-                      </Row>
-                    </Form>
+                        <Row className="text-center" float="middle">
+                          <Col md={{ span: 6, offset: 3 }}>
+                            <Button variant="primary" type="submit">Calculate Attendance</Button>
+                          </Col>
+                        </Row>
+                      </Form>
+                    </Col>
 
                   </Row>
                 </Card.Body>
@@ -409,48 +406,13 @@ class App extends React.Component {
                 <Card.Body>
                   <Row className="mb-4" float="middle">
                     <Col md={{ span: 6, offset: 3 }}>
-                      <Form onSubmit={this.handleSubmitStudentClass}>
-
-                        <Form.Group controlId="formBasicStudentName">
-                          <Form.Label>Student Name: </Form.Label>
-                          <Form.Control value={this.state.studentName} onChange={this.handleChange} name="studentName" type="string" placeholder="Enter Student Name"></Form.Control>
-                        </Form.Group>
-                        <Form.Group controlId="formBasicStudentId">
-                          <Form.Label>Student ID: </Form.Label>
-                          <Form.Control value={this.state.school_id} onChange={this.handleChange} name="school_id" type="string " placeholder="Enter Student ID"></Form.Control>
-                        </Form.Group>
-                        {/* 
-                        <Form.Group controlId="formBasicUploadImage">
-                          <Form.Label>Attendance: </Form.Label>
-                          <Form.Control value={this.state.uploadImage} onChange={this.handleChange} name="" type="" placeholder="uploadImage"></Form.Control>
-                        </Form.Group> */}
+                      <Form onSubmit="">
                         <Form.Group>
-                          <Form.Label>Upload Image: </Form.Label>
-                          <div className="input-group">
-                            <div className="input-group-prepend">
-                              <span className="input-group-text" id="inputGroupFileAddon01">
-                                Upload
-                          </span>
-                            </div>
-                            <div className="custom-file">
-                              <input
-                                type="file"
-                                className="custom-file-input"
-                                id="inputGroupFile01"
-                                aria-describedby="inputGroupFileAddon01"
-                              />
-                              <label className="custom-file-label" htmlFor="inputGroupFile01">
-                                Choose file
-                          </label>
-                            </div>
-                          </div>
+
+                          <Form.Label>Class Stats </Form.Label>
+
                         </Form.Group>
 
-                        <Row className="text-center" float="middle">
-                          <Col md={{ span: 6, offset: 3 }}>
-                            <Button variant="primary" type="submit">Enroll</Button>
-                          </Col>
-                        </Row>
                       </Form>
                     </Col>
                   </Row>
@@ -463,9 +425,7 @@ class App extends React.Component {
       );
     }
     else if (this.state.loggedInUser !== '') {
-      const listButtons =
-
-        this.state.courseArray.map((d) => <Button onClick={this.handleViewClass.bind(this, d)} id="course-list" key={d, d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName}</Button>);
+      const listButtons = this.state.courseArray.map((d) => <Button onClick={this.handleViewClass.bind(this, d)} id="course-list" key={d, d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName}</Button>);
       return (
         <Container>
           <Row>
