@@ -253,7 +253,6 @@ class App extends React.Component {
                   <Row className="mb-4" float="middle">
                     <Col md={{ span: 6, offset: 3 }}>
                       <Form onSubmit={this.handleSubmitStudentClass}>
-
                         <Form.Group controlId="formBasicStudentName">
                           <Form.Label>Student Name: </Form.Label>
                           <Form.Control value={this.state.studentName} onChange={this.handleChange} name="studentName" type="string" placeholder="Enter Student Name"></Form.Control>
