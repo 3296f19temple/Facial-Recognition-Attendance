@@ -401,7 +401,7 @@ class App extends React.Component {
     } else if (this.state.viewRecentMeetings !== 'No'){
      
         //const listDetail = this.state.courseArray.map((d) => <Card.Text id="course-detail" key={d.courseId} variant="secondary">{"Course ID: " + d.courseId + " " + "Course Name: " + d.courseName + " " + "Meeting Schedule: " + d.meetingSchedule}</Card.Text>);
-        const Studentlist = this.state.courseArray.map((d) => <option key={d.courseName, d.id} value={d.id}>{d.studentArray}</option>);
+        const Studentlist = this.state.studentArray.map((d) => <option key={d.studentName, d.id} value={d.id}>{d.studentName}</option>);
 
         const selectedCourse = this.state.attendanceCourseSelected;
         
@@ -429,7 +429,7 @@ class App extends React.Component {
               <Card.Body style={{ alignContent: "center" }}>
                 <Row>
                   <Card id="vewRecentMeetings" style={{ height: '5rem', width: '100%' }}>
-                    <Card.Text id="course-detail" key={this.state.selectedCourse.courseId} variant="secondary">{"Course ID: " + this.state.selectedCourse.courseId + " " + "Course Name: " + this.state.selectedCourse.courseName + " " + "Meeting Schedule: " + this.state.selectedCourse.meetingSchedule + this.state.selectedCourse.username}</Card.Text>
+                    <Card.Text id="course-detail"  variant="secondary"></Card.Text>
                   </Card>
                 </Row>
               </Card.Body>
