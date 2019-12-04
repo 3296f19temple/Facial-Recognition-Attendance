@@ -38,9 +38,15 @@ class App extends React.Component {
       studentAttendanceList: [],
 
 
+
+      viewRecentMeetings: 'No',
+      recentMeetingsStudentSelected: null
+
+
     };
 
     const d = [];
+    const e = [];
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmitLogIn = this.handleSubmitLogIn.bind(this);
@@ -54,6 +60,8 @@ class App extends React.Component {
     this.handleGetStudents = this.handleGetStudents.bind(this);
     this.handleTakeAttendanceClassSelection = this.handleTakeAttendanceClassSelection.bind(this);
     this.updateStudentsState = this.updateStudentsState.bind(this);
+    this.handleRecentClassMeetingsView = this.handleRecentClassMeetingsView.bind(this, e);
+    this.handlePrint = this.handlePrint.bind(this);
   }
 
   handleTakeAttendanceClassSelection(event){
@@ -69,6 +77,13 @@ class App extends React.Component {
     this.setState({takingAttendance: 'Yes'});
   }
 
+  handleRecentClassMeetingsView(event, d){
+    this.setState({viewRecentMeetings: 'Yes'});
+    this.setState({ selectedCourse: d });
+    console.log(this.state.courseArray);
+
+  }
+
   handleChange(event) {
     console.log(event.target.name + '  ' + event.target.value);
     this.setState({ [event.target.name]: event.target.value });
@@ -79,7 +94,7 @@ class App extends React.Component {
     const username = this.state.username;
     const password = this.state.password;
     event.preventDefault();
-    axios.post('http://10.0.0.146:8007/users/', { 'email': email, 'username': username, 'password': password }).then(console.log("Success"));
+    axios.post('http://10.0.0.146:8000/users/', { 'email': email, 'username': username, 'password': password }).then(console.log("Success"));
   }
 
   setLoggedInUser(v, id) {
@@ -93,7 +108,7 @@ class App extends React.Component {
     const password = this.state.password;
     const id = this.state.id;
     event.preventDefault();
-    axios.get('http://10.0.0.146:8007/users/').then(responseArr => {
+    axios.get('http://10.0.0.146:8000/users/').then(responseArr => {
       for (var i = 0; i < responseArr.data.length; i++) {
         if (responseArr.data[i].username === username && responseArr.data[i].password === password) {
           this.setLoggedInUser(username, responseArr.data[i].id);
@@ -130,14 +145,14 @@ class App extends React.Component {
   }
 
   getClasses() {
-    axios.get('http://10.0.0.146:8007/classes/').then(responseArr => {
+    axios.get('http://10.0.0.146:8000/classes/').then(responseArr => {
       this.setClassState(responseArr.data);
     });
   }
 
   //get students
   getStudents() {
-    axios.get('http://10.0.0.146:8007/students/').then(responseArr => {
+    axios.get('http://10.0.0.146:8000/students/').then(responseArr => {
       this.setStudentState(responseArr.data);
       console.log(responseArr.data);
 
@@ -160,10 +175,10 @@ class App extends React.Component {
 
     this.setState({ viewClass: "Yes" });
     this.setState({ addingClass: "No" });
-    this.setState({ selectedCourse: d.id });
+    this.setState({ selectedCourse: d });
     console.log(d);
     console.log(this.state.selectedCourse);
-    console.log(this.state.studentArray)
+    console.log(this.state.studentArray);
     // this.setState({courseId: setcourseId})
 
   }
@@ -174,7 +189,7 @@ class App extends React.Component {
     const meetingSchedule = this.state.meetingSchedule;
 
 
-    axios.post('http://10.0.0.146:8007/classes/', { "courseId": courseId, "courseName": courseName, "meetingSchedule": meetingSchedule, "username": this.state.id });
+    axios.post('http://10.0.0.146:8000/classes/', { "courseId": courseId, "courseName": courseName, "meetingSchedule": meetingSchedule, "username": this.state.id });
     this.setState({ addingClass: "No" });
     this.getClasses();
   }
@@ -196,9 +211,11 @@ class App extends React.Component {
     submissionData.append('classEnrolled', classEnrolled);
 
     console.log({ 'studentName': studentName, 'school_id': school_id, 'attendence': '', 'studentPicture': studentPicture, 'classEnrolled': classEnrolled });
-    axios.post('http://10.0.0.146:8007/students/', submissionData).then(alert("success!"));
+    axios.post('http://10.0.0.146:8000/students/', submissionData).then(alert("success!"));
     this.setState({ addingStudent: "No" });
   }
+
+
 
   updateStudentsState(event){
     this.setState({studentAttendanceList: event});
@@ -218,6 +235,18 @@ class App extends React.Component {
       }
     }
   }
+  
+  handlePrint(event){
+    var content = document.getElementById("viewRecentMeeting");
+    var pri = document.getElementById("viewRecentMeeting").contentWindow;
+    pri.document.open();
+    pri.document.write(content.innerHTML);
+    pri.document.close();
+    pri.focus();
+    pri.print();
+  }
+
+
 
   renderContent() {
     if (this.state.signUpLogIn === 'Sign Up') {
@@ -253,10 +282,10 @@ class App extends React.Component {
           </Form>
         </Container>
       );
-    }
+    } 
     if(this.state.takingAttendance === 'Yes') {
       console.log(this.state.courseArray);
-      const courseListing = this.state.courseArray.map((d) => <option key={d.couseName, d.id} value={d.id}>{d.courseName}</option>);
+      const courseListing = this.state.courseArray.map((d) => <option key={d.courseName, d.id} value={d.id}>{d.courseName}</option>);
 
       const selectedCourse = this.state.attendanceCourseSelected;
       
@@ -270,6 +299,8 @@ class App extends React.Component {
             </Form.Group>
             <Button variant="primary" type="submit">Submit</Button>
           </Form>
+
+          
       );
     }
     else if (this.state.viewClass != 'No') {
@@ -367,6 +398,71 @@ class App extends React.Component {
         </Container>
       );
 
+    } else if (this.state.viewRecentMeetings !== 'No'){
+     
+        //const listDetail = this.state.courseArray.map((d) => <Card.Text id="course-detail" key={d.courseId} variant="secondary">{"Course ID: " + d.courseId + " " + "Course Name: " + d.courseName + " " + "Meeting Schedule: " + d.meetingSchedule}</Card.Text>);
+        const Studentlist = this.state.courseArray.map((d) => <option key={d.courseName, d.id} value={d.id}>{d.studentArray}</option>);
+
+        const selectedCourse = this.state.attendanceCourseSelected;
+        
+      
+        //const studentEnrolledList = this.state.studentArray.map((f) => <Card id="viewClass" style={{ height: '5rem', width: '100%' }}><Card.Text id="student-detail" key={f.studentName, f.school_id, f.attendence, f.studentPicture} variant="secondary">{"Student Name: " + f.studentName + " " + "Student ID: " + f.school_id + " " + "Student Attendance : " + f.attendence}</Card.Text></Card>);
+        return (
+          <Container> 
+          <Row>
+            <Card id="" bg="primary" text="white" style={{ height: '15rem', width: '100%' }}>
+              <Card.Header>Class Details</Card.Header>
+              <Card.Body style={{ alignContent: "center" }}>
+                <Row>
+                  <Card id="viewClass" style={{ height: '5rem', width: '100%' }}>
+                    <Card.Text id="course-detail" key={this.state.selectedCourse.courseId} variant="secondary">{"Course ID: " + this.state.selectedCourse.courseId + " " + "Course Name: " + this.state.selectedCourse.courseName + " " + "Meeting Schedule: " + this.state.selectedCourse.meetingSchedule + this.state.selectedCourse.username}</Card.Text>
+                  </Card>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Row>
+
+          <Row>
+            <Col>
+            <Card id="viewRecentMeetings" bg="primary" text="white" style={{ height: '15rem', width: '100%' }}>
+              <Card.Header>Summary Statistics</Card.Header>
+              <Card.Body style={{ alignContent: "center" }}>
+                <Row>
+                  <Card id="vewRecentMeetings" style={{ height: '5rem', width: '100%' }}>
+                    <Card.Text id="course-detail" key={this.state.selectedCourse.courseId} variant="secondary">{"Course ID: " + this.state.selectedCourse.courseId + " " + "Course Name: " + this.state.selectedCourse.courseName + " " + "Meeting Schedule: " + this.state.selectedCourse.meetingSchedule + this.state.selectedCourse.username}</Card.Text>
+                  </Card>
+                </Row>
+              </Card.Body>
+            </Card>
+            </Col>
+            <Col>
+            <Card id="viewRecentMeeting" bg="primary" text="white" style={{ height: '15rem', width: '100%' }}>
+              <Card.Header>Meeting Attendance</Card.Header>
+              <Card.Body style={{ alignContent: "center" }}>
+                <Card.Title>Students</Card.Title>
+              
+                  <Form onSubmit={this.handleGetStudents}>
+                    <Form.Group>
+                      <Form.Label>Select Student:</Form.Label>
+                      <select value={this.state.recentMeetingsStudentSelected} onChange="">
+                        {Studentlist}
+                      </select>
+                    </Form.Group>
+                    <Button variant="primary" type="submit">Submit</Button>
+                  </Form>
+              <button onClick={() => window.print()}>Print This Page</button>
+              </Card.Body>
+            </Card>
+            </Col>
+          </Row>
+          
+
+          
+          
+          </Container>
+
+      );
+
     }
     else if (this.state.addingClass !== 'No') {
       return (
@@ -394,14 +490,13 @@ class App extends React.Component {
           </Row>
         </Form>
       );
-    }
+    } 
     else if (this.state.loggedInUser !== '') {
       const listButtons =
 
         this.state.courseArray.map((d) => <Button onClick={this.handleViewClass.bind(this, d)} id="course-list" key={d, d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName}</Button>);
 
-
-
+        const recentMeetingsButtons =this.state.courseArray.map((d) => <Button onClick={this.handleRecentClassMeetingsView.bind(this, d)} id="course-list" key={d, d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName + ' ' + 'section:  ' + d.meetingSchedule}</Button>);
       return (
         <Container>
           <Row>
@@ -438,6 +533,7 @@ class App extends React.Component {
               <Card id="manageClass" bg="primary" text="white" style={{ height: '36rem', width: '100%' }}>
                 <Card.Header>Recent Meetings</Card.Header>
                 <Card.Body>
+                {recentMeetingsButtons}
                 </Card.Body>
               </Card>
             </Col>
