@@ -36,6 +36,8 @@ class App extends React.Component {
       attendanceCourseSelected: '',
       attendanceStudets: [{student: "", attendancePicture: null}],
       studentAttendanceList: [],
+      studentDailyPicture: null,
+      studentDailyAttendance: null,
 
 
     };
@@ -54,6 +56,9 @@ class App extends React.Component {
     this.handleGetStudents = this.handleGetStudents.bind(this);
     this.handleTakeAttendanceClassSelection = this.handleTakeAttendanceClassSelection.bind(this);
     this.updateStudentsState = this.updateStudentsState.bind(this);
+    this.getAllStudentsForm = this.getAllStudentsForm.bind(this);
+    this.changeDailyPicture = this.changeDailyPicture.bind(this);
+    this.letsfinishthis = this.letsfinishthis.bind(this);
   }
 
   handleTakeAttendanceClassSelection(event){
@@ -150,9 +155,12 @@ class App extends React.Component {
 
   }
 
-  addAttendanceStudent(e) {
-    for(var i=0;  i<e.length; i++){
-      this.setState((prevState) => ({attendanceStudets: [...prevState.attendanceStudets, {student: e[i].studentName, attendancePicture: null}],}));
+  addAttendanceStudent() {
+    const studentListing = this.state.studentAttendanceList;
+    if(studentListing != undefined && studentListing.length != 0){
+      for(var i=0; i < studentListing.length; i++){
+        this.setState((prevState) => ({attendanceStudets: [...prevState.attendanceStudets, {student: studentListing[i].studentName, attendancePicture: null}],}));
+      }
     }
   }
 
@@ -201,21 +209,66 @@ class App extends React.Component {
   }
 
   updateStudentsState(event){
+    console.log(event);
     this.setState({studentAttendanceList: event});
   }
   
   handleGetStudents(event){
     event.preventDefault();
     const setClass = this.state.attendanceCourseSelected;
+    const studentListing = this.state.studentAttendanceList;
     if(setClass != ''){
       for(var i=0; i<this.state.courseArray.length; i++){
         console.log(this.state.courseArray[i].id + this.state.attendanceCourseSelected);
-        if(this.state.courseArray[i].id === setClass){
-          this.updateStudentsState(this.state.courseArray);
-          console.log(setClass);
+        if(this.state.courseArray[i].id === parseInt(setClass)){
+          this.setState({studentAttendanceList: this.state.courseArray[i].classes_enrolled})
+          console.log(this.state.courseArray[i].classes_enrolled);
+          var testArray = [];
+          for(var j=0; j < this.state.courseArray[i].classes_enrolled.length; j++){
+            testArray[j] = {id: this.state.courseArray[i].classes_enrolled[j].id, student: this.state.courseArray[i].classes_enrolled[j].studentName, dailyPicture: null};
+          }
+          this.setState({studentAttendanceList: testArray});
           //const studentListing = this.state.courseArray[i].classes_enrolled.map((d) => <Form.Group><Form.Label>{d.studentName}</Form.Label><Form.Control value={this.state.school_id} onChange={this.handleChange} name="school_id" type="string " placeholder="Enter School ID"></Form.Control></Form.Group>)
         }
       }
+    }
+  }
+
+  letsfinishthis(event){
+
+    event.preventDefault();
+    const studentId = this.state.studentDailyAttendance;
+    const studentAttendancePicture = this.state.studentDailyPicture;
+
+    let submissionData = new FormData();
+    submissionData.append('student_id', studentId);
+    submissionData.append('student_daily_picture', studentAttendancePicture);
+
+
+    axios.post('http://10.0.0.146:8007/takeattendance/', submissionData).then(alert("success!"));
+    this.setState({ addingStudent: "No" });
+    
+    event.preventDefault();
+    console.log(this.state.studentDailyAttendance);
+
+  }
+
+  changeDailyPicture(event){
+    this.setState({studentDailyPicture: event.target.files[0], loaded: 0,});
+    this.setState({studentDailyAttendance: event.target.name});
+  }
+  
+  getAllStudentsForm(){
+    if(this.state.studentAttendanceList){
+      console.log(this.state.studentAttendanceList);
+      const studentAttendanceData = this.state.studentAttendanceList.map((f) =>
+      <div><Form onSubmit={this.letsfinishthis}><label>{f.student}</label><input name={f.student} onChange={this.changeDailyPicture} type="file"/><Button variant="secondary" type="submit">Submit</Button></Form></div>
+      );
+      return(
+        <div>
+        {studentAttendanceData}
+        </div>
+      );
     }
   }
 
@@ -257,10 +310,9 @@ class App extends React.Component {
     if(this.state.takingAttendance === 'Yes') {
       console.log(this.state.courseArray);
       const courseListing = this.state.courseArray.map((d) => <option key={d.couseName, d.id} value={d.id}>{d.courseName}</option>);
-
-      const selectedCourse = this.state.attendanceCourseSelected;
       
       return (
+        <div>
           <Form onSubmit={this.handleGetStudents}>
             <Form.Group>
               <Form.Label>Select a Course:</Form.Label>
@@ -270,6 +322,8 @@ class App extends React.Component {
             </Form.Group>
             <Button variant="primary" type="submit">Submit</Button>
           </Form>
+          {this.getAllStudentsForm()}
+        </div>
       );
     }
     else if (this.state.viewClass != 'No') {
