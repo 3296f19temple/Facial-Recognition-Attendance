@@ -27,5 +27,6 @@ router.register(r'students',views.StudentViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('takeattendance/', views.TakeAttendance),
     path(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

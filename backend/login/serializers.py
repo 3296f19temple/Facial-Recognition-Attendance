@@ -8,12 +8,19 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ['id', 'email', 'username', 'password']
 
-class ClassesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Classes
-        fields = ['courseId', 'courseName', 'meetingSchedule','username']
-
 class StudentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Students
-        fields = ['courseId','studentName','school_id','attendence','studentPicture']
+        fields = ['id', 'studentName','school_id','attendence','studentPicture', 'classEnrolled']
+
+class ClassesSerializer(serializers.ModelSerializer):
+
+    classes_enrolled = StudentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Classes
+        fields = ['id','courseId', 'courseName', 'meetingSchedule','username', 'classes_enrolled']
+
+
+    
