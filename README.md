@@ -14,8 +14,13 @@ Along with the 'take attendance' option, there are also options to see the atten
 
 # Contributors
 Sean Droke
+
 Bella Yang
+
 Tyler Allen
+
 Ioannis Kiouris Kyparisis
+
 Chris Bechter
+
 Jagnoor Singh
