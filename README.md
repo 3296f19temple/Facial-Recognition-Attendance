@@ -2,7 +2,7 @@
 Repository hosting the source code for the Facial Recognition Based Attendance Application
 
 ## What is this project?
-This project will use the facial recognition as an alternative for the many current attendance taking systems. Facial recognition will eliminate or significantly reduce the issues of said attendance techniques by an automated system of recognizing which student is currently present in the room. Moreover, it will involve little user interaction in the user interface of the web application platform. The user audience is targeted to professors and teachers to a provide time-efficient and user-friendly attendance system for institutions. 
+This project will use facial recognition as an alternative for the many current attendance taking systems. Facial recognition will eliminate or significantly reduce the issues of said attendance techniques by an automated system of recognizing which student is currently present in the room. Moreover, it will involve little user interaction in the user interface of the web application platform. The user audience is targeted to professors and teachers to a provide time-efficient and user-friendly attendance system for institutions. 
 
 The real-world issues faced in many institutions show that the duration of attendance check causes wasted lecture time, confusion, inaccuracy, and human error. Creating a sign in sheet, calling out names, using clickers all become tedious tasks that can be easily eliminated in this age of technology. Automating this task will relieve time consuming stress, as well as make students aware that they need to attend class each and every period. This project can also minimize the rate at which peers will sign each other in if they are absent.
 
