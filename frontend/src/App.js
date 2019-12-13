@@ -23,7 +23,7 @@ class App extends React.Component {
       studentArray: [],
       addingClass: 'No',
       viewClass: 'No',
-      selectedCourse: [],
+      selectedCourse: null,
       courseId: '',
       studentCourseId: '',
       courseName: '',
@@ -31,12 +31,22 @@ class App extends React.Component {
       studentName: '',
       school_id: '',
       attendence: '',
-      studentPicture: null
+      studentPicture: null,
+      takingAttendance: 'No',
+      attendanceCourseSelected: '',
+      attendanceStudets: [{student: "", attendancePicture: null}],
+      studentAttendanceList: [],
+
+
+
+      viewRecentMeetings: 'No',
+      recentMeetingsStudentSelected: null
 
 
     };
 
     const d = [];
+    const e = [];
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmitLogIn = this.handleSubmitLogIn.bind(this);
@@ -44,9 +54,38 @@ class App extends React.Component {
     this.handleSubmitCreateClass = this.handleSubmitCreateClass.bind(this);
     this.handleViewClass = this.handleViewClass.bind(this, d);
     this.handleSubmitStudentClass = this.handleSubmitStudentClass.bind(this);
+    this.onChangeFileUpload = this.onChangeFileUpload.bind(this);
+    this.handleTakeAttendanceView = this.handleTakeAttendanceView.bind(this);
+    this.addAttendanceStudent = this.addAttendanceStudent.bind(this);
+    this.handleGetStudents = this.handleGetStudents.bind(this);
+    this.handleTakeAttendanceClassSelection = this.handleTakeAttendanceClassSelection.bind(this);
+    this.updateStudentsState = this.updateStudentsState.bind(this);
+    this.handleRecentClassMeetingsView = this.handleRecentClassMeetingsView.bind(this, e);
+    this.handlePrint = this.handlePrint.bind(this);
+  }
+
+  handleTakeAttendanceClassSelection(event){
+    this.setState({attendanceCourseSelected: event.target.value});
+    console.log("called");
+  }
+
+  onChangeFileUpload = event => {
+    this.setState({studentPicture: event.target.files[0], loaded: 0,})
+  }
+
+  handleTakeAttendanceView(event){
+    this.setState({takingAttendance: 'Yes'});
+  }
+
+  handleRecentClassMeetingsView(event, d){
+    this.setState({viewRecentMeetings: 'Yes'});
+    this.setState({ selectedCourse: d });
+    console.log(this.state.courseArray);
+
   }
 
   handleChange(event) {
+    console.log(event.target.name + '  ' + event.target.value);
     this.setState({ [event.target.name]: event.target.value });
   }
 
@@ -126,6 +165,12 @@ class App extends React.Component {
 
   }
 
+  addAttendanceStudent(e) {
+    for(var i=0;  i<e.length; i++){
+      this.setState((prevState) => ({attendanceStudets: [...prevState.attendanceStudets, {student: e[i].studentName, attendancePicture: null}],}));
+    }
+  }
+
   handleViewClass(event, d) {
 
     this.setState({ viewClass: "Yes" });
@@ -133,7 +178,7 @@ class App extends React.Component {
     this.setState({ selectedCourse: d });
     console.log(d);
     console.log(this.state.selectedCourse);
-    console.log(this.state.studentArray)
+    console.log(this.state.studentArray);
     // this.setState({courseId: setcourseId})
 
   }
@@ -151,15 +196,57 @@ class App extends React.Component {
 
   //submit for enroll student 
   handleSubmitStudentClass(event) {
+    event.preventDefault();
     const studentCourseId = this.state.courseArray.courseId;
     const studentName = this.state.studentName;
     const school_id = this.state.school_id;
-    const attendence = this.state.attendence;
     const studentPicture = this.state.studentPicture;
-    axios.post('http://10.0.0.146:8000/students/', { 'studentCourseId': studentCourseId, 'studentName': studentName, 'school_id': school_id, 'attendence': attendence, 'studentPicture': studentPicture }).then(console.log("Success"));
+    const classEnrolled = this.state.selectedCourse;
+
+    let submissionData = new FormData();
+    submissionData.append('studentName', studentName);
+    submissionData.append('school_id', school_id);
+    submissionData.append('attendance', '');
+    submissionData.append('studentPicture', studentPicture);
+    submissionData.append('classEnrolled', classEnrolled);
+
+    console.log({ 'studentName': studentName, 'school_id': school_id, 'attendence': '', 'studentPicture': studentPicture, 'classEnrolled': classEnrolled });
+    axios.post('http://10.0.0.146:8000/students/', submissionData).then(alert("success!"));
     this.setState({ addingStudent: "No" });
-    this.getStudents();
   }
+
+
+
+  updateStudentsState(event){
+    this.setState({studentAttendanceList: event});
+  }
+  
+  handleGetStudents(event){
+    event.preventDefault();
+    const setClass = this.state.attendanceCourseSelected;
+    if(setClass != ''){
+      for(var i=0; i<this.state.courseArray.length; i++){
+        console.log(this.state.courseArray[i].id + this.state.attendanceCourseSelected);
+        if(this.state.courseArray[i].id === setClass){
+          this.updateStudentsState(this.state.courseArray);
+          console.log(setClass);
+          //const studentListing = this.state.courseArray[i].classes_enrolled.map((d) => <Form.Group><Form.Label>{d.studentName}</Form.Label><Form.Control value={this.state.school_id} onChange={this.handleChange} name="school_id" type="string " placeholder="Enter School ID"></Form.Control></Form.Group>)
+        }
+      }
+    }
+  }
+  
+  handlePrint(event){
+    var content = document.getElementById("viewRecentMeeting");
+    var pri = document.getElementById("viewRecentMeeting").contentWindow;
+    pri.document.open();
+    pri.document.write(content.innerHTML);
+    pri.document.close();
+    pri.focus();
+    pri.print();
+  }
+
+
 
   renderContent() {
     if (this.state.signUpLogIn === 'Sign Up') {
@@ -195,6 +282,26 @@ class App extends React.Component {
           </Form>
         </Container>
       );
+    } 
+    if(this.state.takingAttendance === 'Yes') {
+      console.log(this.state.courseArray);
+      const courseListing = this.state.courseArray.map((d) => <option key={d.courseName, d.id} value={d.id}>{d.courseName}</option>);
+
+      const selectedCourse = this.state.attendanceCourseSelected;
+      
+      return (
+          <Form onSubmit={this.handleGetStudents}>
+            <Form.Group>
+              <Form.Label>Select a Course:</Form.Label>
+              <select value={this.state.attendanceCourseSelected} onChange={this.handleTakeAttendanceClassSelection}>
+                {courseListing}
+              </select>
+            </Form.Group>
+            <Button variant="primary" type="submit">Submit</Button>
+          </Form>
+
+          
+      );
     }
     else if (this.state.viewClass != 'No') {
       const listDetail = this.state.courseArray.map((d) => <Card.Text id="course-detail" key={d.courseId, d.courseName, d.meetingSchedule} variant="secondary">{"Course ID: " + d.courseId + " " + "Course Name: " + d.courseName + " " + "Meeting Schedule: " + d.meetingSchedule}</Card.Text>);
@@ -218,7 +325,7 @@ class App extends React.Component {
 
           <Row>
             <Col >
-              <Card id="manageClass" bg="primary" text="white" style={{ height: '28rem', width: '100%' }}>
+              <Card id="manageClass" bg="primary" text="white" style={{ height: '100%', width: '100%' }}>
                 <Card.Header>Students Enrolled</Card.Header>
 
                 <Card.Body>
@@ -244,8 +351,8 @@ class App extends React.Component {
                           <Form.Control value={this.state.studentName} onChange={this.handleChange} name="studentName" type="string" placeholder="Enter Student Name"></Form.Control>
                         </Form.Group>
                         <Form.Group controlId="formBasicStudentId">
-                          <Form.Label>Student ID: </Form.Label>
-                          <Form.Control value={this.state.school_id} onChange={this.handleChange} name="school_id" type="string " placeholder="Enter Student ID"></Form.Control>
+                          <Form.Label>School ID: </Form.Label>
+                          <Form.Control value={this.state.school_id} onChange={this.handleChange} name="school_id" type="string " placeholder="Enter School ID"></Form.Control>
                         </Form.Group>
 {/* 
                         <Form.Group controlId="formBasicUploadImage">
@@ -263,6 +370,8 @@ class App extends React.Component {
                           <div className="custom-file">
                             <input
                               type="file"
+                              name="profile-picture"
+                              onChange={this.onChangeFileUpload}
                               className="custom-file-input"
                               id="inputGroupFile01"
                               aria-describedby="inputGroupFileAddon01"
@@ -287,6 +396,71 @@ class App extends React.Component {
             </Col>
           </Row>
         </Container>
+      );
+
+    } else if (this.state.viewRecentMeetings !== 'No'){
+     
+        //const listDetail = this.state.courseArray.map((d) => <Card.Text id="course-detail" key={d.courseId} variant="secondary">{"Course ID: " + d.courseId + " " + "Course Name: " + d.courseName + " " + "Meeting Schedule: " + d.meetingSchedule}</Card.Text>);
+        const Studentlist = this.state.studentArray.map((d) => <option key={d.studentName, d.id} value={d.id}>{d.studentName}</option>);
+
+        const selectedCourse = this.state.attendanceCourseSelected;
+        
+      
+        //const studentEnrolledList = this.state.studentArray.map((f) => <Card id="viewClass" style={{ height: '5rem', width: '100%' }}><Card.Text id="student-detail" key={f.studentName, f.school_id, f.attendence, f.studentPicture} variant="secondary">{"Student Name: " + f.studentName + " " + "Student ID: " + f.school_id + " " + "Student Attendance : " + f.attendence}</Card.Text></Card>);
+        return (
+          <Container> 
+          <Row>
+            <Card id="" bg="primary" text="white" style={{ height: '15rem', width: '100%' }}>
+              <Card.Header>Class Details</Card.Header>
+              <Card.Body style={{ alignContent: "center" }}>
+                <Row>
+                  <Card id="viewClass" style={{ height: '5rem', width: '100%' }}>
+                    <Card.Text id="course-detail" key={this.state.selectedCourse.courseId} variant="secondary">{"Course ID: " + this.state.selectedCourse.courseId + " " + "Course Name: " + this.state.selectedCourse.courseName + " " + "Meeting Schedule: " + this.state.selectedCourse.meetingSchedule + this.state.selectedCourse.username}</Card.Text>
+                  </Card>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Row>
+
+          <Row>
+            <Col>
+            <Card id="viewRecentMeetings" bg="primary" text="white" style={{ height: '15rem', width: '100%' }}>
+              <Card.Header>Summary Statistics</Card.Header>
+              <Card.Body style={{ alignContent: "center" }}>
+                <Row>
+                  <Card id="vewRecentMeetings" style={{ height: '5rem', width: '100%' }}>
+                    <Card.Text id="course-detail"  variant="secondary"></Card.Text>
+                  </Card>
+                </Row>
+              </Card.Body>
+            </Card>
+            </Col>
+            <Col>
+            <Card id="viewRecentMeeting" bg="primary" text="white" style={{ height: '15rem', width: '100%' }}>
+              <Card.Header>Meeting Attendance</Card.Header>
+              <Card.Body style={{ alignContent: "center" }}>
+                <Card.Title>Students</Card.Title>
+              
+                  <Form onSubmit={this.handleGetStudents}>
+                    <Form.Group>
+                      <Form.Label>Select Student:</Form.Label>
+                      <select value={this.state.recentMeetingsStudentSelected} onChange="">
+                        {Studentlist}
+                      </select>
+                    </Form.Group>
+                    <Button variant="primary" type="submit">Submit</Button>
+                  </Form>
+              <button onClick={() => window.print()}>Print This Page</button>
+              </Card.Body>
+            </Card>
+            </Col>
+          </Row>
+          
+
+          
+          
+          </Container>
+
       );
 
     }
@@ -316,14 +490,13 @@ class App extends React.Component {
           </Row>
         </Form>
       );
-    }
+    } 
     else if (this.state.loggedInUser !== '') {
       const listButtons =
 
         this.state.courseArray.map((d) => <Button onClick={this.handleViewClass.bind(this, d)} id="course-list" key={d, d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName}</Button>);
 
-
-
+        const recentMeetingsButtons =this.state.courseArray.map((d) => <Button onClick={this.handleRecentClassMeetingsView.bind(this, d)} id="course-list" key={d, d.courseId} variant="secondary">{d.courseId + ' ' + d.courseName + ' ' + 'section:  ' + d.meetingSchedule}</Button>);
       return (
         <Container>
           <Row>
@@ -342,7 +515,7 @@ class App extends React.Component {
                   Take Attendance
                 </Card.Header>
                 <Card.Body>
-                  <Button variant="secondary">Take Attendance</Button>
+                  <Button onClick={this.handleTakeAttendanceView.bind(this)} variant="secondary">Take Attendance</Button>
                 </Card.Body>
               </Card>
             </Col>
@@ -360,6 +533,7 @@ class App extends React.Component {
               <Card id="manageClass" bg="primary" text="white" style={{ height: '36rem', width: '100%' }}>
                 <Card.Header>Recent Meetings</Card.Header>
                 <Card.Body>
+                {recentMeetingsButtons}
                 </Card.Body>
               </Card>
             </Col>
