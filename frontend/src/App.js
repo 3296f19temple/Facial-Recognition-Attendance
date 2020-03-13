@@ -5,6 +5,8 @@ import './App.css';
 import axios from 'axios';
 import querystring from 'querystring';
 import { Image, Navbar, Container, Jumbotron, Form, Button, Row, Col, Card } from 'react-bootstrap';
+import pal from './pal.png';
+import pal2 from './b88df8310e3c4a5faa8cb5fe8119fd31.jpeg';
 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
@@ -84,7 +86,7 @@ class App extends React.Component {
     const username = this.state.username;
     const password = this.state.password;
     event.preventDefault();
-    axios.post('http://10.0.0.146:8007/users/', { 'email': email, 'username': username, 'password': password }).then(console.log("Success"));
+    axios.post('http://10.0.0.146:8007/users/', { 'email': email, 'username': username, 'password': password }).then(console.log("Success!"));
   }
 
   setLoggedInUser(v, id) {
@@ -492,6 +494,7 @@ class App extends React.Component {
               <Card id="manageClass" bg="primary" text="white" style={{ height: '36rem', width: '100%' }}>
                 <Card.Header>Recent Meetings</Card.Header>
                 <Card.Body>
+                  <h1>404 Not Finished</h1>
                 </Card.Body>
               </Card>
             </Col>
@@ -537,7 +540,7 @@ class App extends React.Component {
       <div className="App">
         <Navbar expand="lg" variant="dark" bg="dark">
           <Container>
-            <Navbar.Brand href="#">Facial Recognition Based Attendance</Navbar.Brand>
+            <Navbar.Brand href="#"><img className="nav-image" src={pal}/>Facial Recognition Based Attendance</Navbar.Brand>
             <Container id="button-group-navbar">
               <Button onClick={this.signIn.bind(this)} id="signIn" variant="primary">Sign In</Button>
               <Button onClick={this.signUp.bind(this)} id="createAccount" variant="primary">Create Account</Button>
